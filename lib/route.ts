@@ -3,6 +3,7 @@ import Sequelize from 'sequelize';
 import lazyTruth from './lazy-truth';
 
 import crudTypes from './types/crud-operation.enum';
+import RoutingContext from './types/routing-context';
 
 type opType = crudTypes;
 
@@ -24,12 +25,6 @@ const createHandlers = (
     custom: [...a.custom, c],
 }), { custom: [] })
 
-// @@ MOVE ME
-interface RoutingContext {
-    method: string,
-    postData: Object,
-    urlParams: Object,
-}
 
 const createEndpointHandler = (
     sequalizeInstance: any,
@@ -54,10 +49,11 @@ const createEndpointHandler = (
             return methodHandler(ctx)
         }
 
-        return Promise.all(handlers.custom.map((handler: any) => handler(
-            ctx,
-            sequalizeModel,
-        )))
+        // @@@ ya need to do an undefined check on this.
+        // return Promise.all(handlers.custom.map((handler: any) => handler(
+        //     ctx,
+        //     sequalizeModel,
+        // )))
     }
 }
 

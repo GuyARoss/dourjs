@@ -2,6 +2,10 @@ import Sequelize from 'sequelize';
 
 import router, { route } from './lib/router';
 
+import start from './lib//start';
+
+start({ routes: {} })(3001, () => { console.log('started!!') })
+
 // import CRUDOperation from './lib/crud-operation.enum';
 
 // const model = () => ({
@@ -13,6 +17,3 @@ import router, { route } from './lib/router';
 
 // @@ middleware
 // @@ custom operations
-
-
-router({ database: 'test', username: 'test', password: 'test' })

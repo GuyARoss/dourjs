@@ -21,14 +21,15 @@ export default async (config: RouterConfig) => {
 
     await sequalizeInstance.sync()
 
-
-    const routes = [];
-    const initRoute = (initRoute: any) => {
-
-    }
+    // @@ garbage.. :/ prob not going to be collected...
+    const routes = {} as { [id: string]: any };
+    const initRoute = (route: {
+        endpointPath: string,
+        endpointHandler: any,
+    }) => routes[route.endpointPath] = route.endpointHandler;
 
     return {
-        route({ sequalizeInstance, initRoute }),
+        route({ sequalizeInstance, initRoute })
     }
 }
 
