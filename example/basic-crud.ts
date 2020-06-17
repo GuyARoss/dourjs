@@ -4,9 +4,6 @@ app = router(
     // your settings.
 )
 
-app.middleware((req: any, res: any) => {
-    // do some operation
-})
 
 app.route('test', [
     CRUDOperation.CREATE,

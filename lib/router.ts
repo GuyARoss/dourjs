@@ -1,27 +1,12 @@
-import Sequelize from 'sequelize';
 
 import route from './route';
+import start from './start';
 
-interface RouterConfig {
-    database: string,
-    username: string,
-    password: string,
-}
+import DataSourceAdapter from './types/datasource-adapter.type';
 
-export default async (config: RouterConfig) => {
-    const sequalizeInstance = new Sequelize(
-        config.database,
-        config.password,
-        config.username,
-        {
-            host: 'localhost',
-            dialect: 'postgresql',
-        }
-    );
+export default (dataSourceAdapter: DataSourceAdapter) => {
+    const datasource = dataSourceAdapter.configure();
 
-    await sequalizeInstance.sync()
-
-    // @@ garbage.. :/ prob not going to be collected...
     const routes = {} as { [id: string]: any };
     const initRoute = (route: {
         endpointPath: string,
@@ -29,7 +14,8 @@ export default async (config: RouterConfig) => {
     }) => routes[route.endpointPath] = route.endpointHandler;
 
     return {
-        route({ sequalizeInstance, initRoute })
+        route: route(datasource, initRoute, dataSourceAdapter.translateModel),
+        start: start({ routes }),
     }
 }
 

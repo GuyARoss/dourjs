@@ -1,19 +1,17 @@
-import Sequelize from 'sequelize';
+import router from './lib/router';
+import types from './lib/model-types';
+import crudType from './lib/types/crud-operation.enum';
 
-import router, { route } from './lib/router';
+import memoryStore from './example/memory-datasource';
 
-import start from './lib//start';
+const store = memoryStore();
 
-start({ routes: {} })(3001, () => { console.log('started!!') })
+const app = router(store)
 
-// import CRUDOperation from './lib/crud-operation.enum';
+app.route('/test', {
+    name: types.String
+}, [
+    crudType.READ,
+])
 
-// const model = () => ({
-//     username: Sequelize.STRING,
-//     birthday: Sequelize.DATE,
-// })
-
-// route(model, [CRUDOperation.CREATE, CRUDOperation.READ])
-
-// @@ middleware
-// @@ custom operations
+app.start(3000, () => console.log('app start on port 3000'))

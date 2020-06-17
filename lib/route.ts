@@ -1,24 +1,40 @@
-import Sequelize from 'sequelize';
-
 import lazyTruth from './lazy-truth';
 
 import crudTypes from './types/crud-operation.enum';
 import RoutingContext from './types/routing-context';
+import { DataSource, DataSourceModel } from './types/datasource-adapter.type';
 
 type opType = crudTypes;
 
 // create handlers for each of the different method types.
 // if "custom" we want to map that to a special extended endpoint
-const createHandlers = (
-    sequalizeModel: any,
+export const createHandlers = (
+    datasource: DataSourceModel,
     operationTypes: Array<opType>,
 ) => operationTypes.reduce((a, c) => typeof c !== 'function' ? ({
     ...a,
     [c]: lazyTruth({
-        [crudTypes.CREATE]: (ctx: RoutingContext) => { },
-        [crudTypes.UPDATE]: (ctx: RoutingContext) => { },
-        [crudTypes.DELETE]: (ctx: RoutingContext) => { },
-        [crudTypes.READ]: (ctx: RoutingContext) => { },
+        [crudTypes.CREATE]: (
+            ctx: RoutingContext,
+        ) => datasource.create(ctx.postData),
+        [crudTypes.UPDATE]: (
+            ctx: RoutingContext,
+        ) => datasource.update(ctx.postData),
+        [crudTypes.DELETE]: (
+            ctx: RoutingContext,
+        ) => datasource.delete(ctx.postData),
+        [crudTypes.READ]: ({
+            urlParams: { offset, limit, ...rest },
+        }: RoutingContext,
+        ) =>
+            rest.hasOwnProperty('id') ?
+                datasource.findOne({ where: rest }) :
+                datasource.findAllAndCountAll({
+                    where: rest,
+                    offset,
+                    limit,
+                }),
+
     }, (op) => op === c.toString()),
 }) : ({
     ...a,
@@ -26,28 +42,38 @@ const createHandlers = (
 }), { custom: [] })
 
 
+// creates the requested crud endpoints based on the provided 'operationTypes'
 const createEndpointHandler = (
-    sequalizeInstance: any,
+    name: string,
+    datasource: DataSource,
     model: any,
     operationsTypes: any,
 ) => {
-    const sequalizeModel = sequalizeInstance.define(name, model)
+    const datasourceModel = datasource.define(name, model)
     const handlers: { [id: string]: any } = createHandlers(
-        sequalizeModel,
+        datasourceModel,
         operationsTypes,
     )
 
+    console.log('datmodel', datasourceModel)
+
     return async (ctx: RoutingContext) => {
+        console.log(ctx)
         const methodHandler = lazyTruth({
             get: handlers[crudTypes.READ],
             put: handlers[crudTypes.UPDATE],
             delete: handlers[crudTypes.DELETE],
             post: handlers[crudTypes.CREATE],
         }, (op) => op === ctx.method)
+        console.log('mh', methodHandler)
 
         if (!!methodHandler) {
-            return methodHandler(ctx)
+            const resp = methodHandler(ctx)
+            console.log('look at me', resp)
+            return resp
         }
+
+        return {}
 
         // @@@ ya need to do an undefined check on this.
         // return Promise.all(handlers.custom.map((handler: any) => handler(
@@ -58,8 +84,9 @@ const createEndpointHandler = (
 }
 
 export default (
-    sequalizeInstance: any,
+    datasource: DataSource,
     initRoute: any,
+    translateModel: any,
 ) => (
     name: string,
     model: any,
@@ -67,8 +94,9 @@ export default (
     ) => initRoute({
         endpointPath: name,
         endpointHandler: createEndpointHandler(
-            sequalizeInstance,
-            model,
+            name,
+            datasource,
+            translateModel(model),
             operationsTypes,
         ),
     })
