@@ -1,6 +1,6 @@
 import http from 'http';
 
-import extractUrlParams from './extract-url-params';
+import extractUrlParams from './utils/extract-url-params';
 
 const parseRequest = (req: any) => {
     return new Promise((res, rej) => {

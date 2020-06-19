@@ -13,7 +13,7 @@ export interface DataSourceModel {
 
 interface DataSourceAdapter {
     configure: () => DataSource,
-    translateModel: () => void,
+    translateModel: (args: any) => void,
 }
 
 export default DataSourceAdapter

@@ -1,12 +1,18 @@
 import http from 'http';
 import httpServer, { RequestError, RequestContext } from './http-server';
-import { EndpointHandler } from './route';
-import lazyReturn from './lazy-return';
-import matchParams from './match-params';
-import lazyTruth from './lazy-truth';
+import lazyReturn from './utils/lazy-return';
+import matchParams from './utils/match-params';
+import lazyTruth from './utils/lazy-truth';
+
+export interface EndpointHandler {
+    handler: (ctx: RequestContext) => any,
+    supportedOperations: any,
+    matchParams: boolean,
+}
+
 
 const executeMiddleware = async (
-    middleware: { [id: string]: any }, req, resp, hangupRequest,
+    middleware: { [id: string]: any }, req, resp,
 ) => {
     let count = 0;
     let prev;
@@ -42,6 +48,7 @@ export default ({ routes, middleware }: {
     port: number,
     cb: () => void,
     ) => {
+        console.log(routes)
         httpServer(port, async (
             request: RequestContext,
             handleErr: RequestError,
@@ -74,12 +81,15 @@ export default ({ routes, middleware }: {
             })
 
             if (typeof endpoint === 'undefined') {
-                handleErr(undefined, 404)
+                handleErr('resource not found', 404)
                 return
             }
 
             if (request.method === 'OPTIONS') {
-                httpResponse.setHeader('Allow', endpoint.supportedOperations.join(','))
+                httpResponse.setHeader(
+                    'Allow',
+                    endpoint.supportedOperations.join(','),
+                )
             }
 
             return endpoint.handler({

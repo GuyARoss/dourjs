@@ -1,37 +1,18 @@
-import http from 'http';
 import router from './lib/router';
 import types from './lib/model-types';
-import crudType from './lib/types/crud-operation.enum';
 
 import memoryStore from './example/memory-datasource';
 import { RequestContext } from './lib/http-server';
 
+import modelRouter from './lib/model-router';
+
 const store = memoryStore();
 
-const app = router(store)
+const app = router()
 
-app.route('/test', {
-    name: types.String,
-}, [
-    crudType.READ,
-])
+const autoCrud = modelRouter(store)
 
-app.registerMiddleware('test', (
-    httpRequest: http.IncomingMessage,
-    httpResponse: http.ServerResponse,
-    next,
-) => {
-    console.log(httpRequest.headers['test'])
-    if (!!httpRequest.headers['test']) {
-        next()
-        return
-    }
-
-    httpResponse.writeHead(402, { 'Content-Type': 'application/json' });
-    httpResponse.end();
-})
-
-app.route('/test/:poop', {
+app.route(autoCrud('/test/:poop', {
     name: types.String,
 }, [
     (ctx: RequestContext) => {
@@ -40,10 +21,14 @@ app.route('/test/:poop', {
     (ctx: RequestContext) => {
         return 'cake me daddy!'
     },
-])
+]))
 
+app.get('/test', (ctx: RequestContext) => {
+    console.log('being called!')
+    return "working!"
+})
 
-app.start(3000, () => console.log('app start on port 3000'))
+app.start(3002, () => console.log('app start on port 3002'))
 
 // const compose = (any) => { }
 
