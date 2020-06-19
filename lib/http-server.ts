@@ -43,6 +43,7 @@ export interface RequestContext {
     urlParams: () => { [id: string]: string },
     method: string,
     matchParams?: { [id: string]: string },
+    hangupRequest: any,
 }
 
 export type RequestHandler = (
@@ -70,11 +71,16 @@ const HTTPServer = async (port: number, router: RequestHandler) => {
     const httpOut = httpOutBuilder();
 
     http.createServer(async (req, res) => {
+        let hangup = false;
+        const hangupRequest = () => {
+            hangup = true
+        }
         try {
             const requestContext = {
                 postBody: async () => parseRequest(req),
                 urlParams: () => extractUrlParams(req.url as string),
                 method: req.method,
+                hangupRequest,
             } as RequestContext
 
             const handlerResponse = await router(
@@ -88,8 +94,11 @@ const HTTPServer = async (port: number, router: RequestHandler) => {
                 return;
             }
 
-            httpOut(res, handlerResponse, 200)
+            if (!hangup) {
+                httpOut(res, handlerResponse, 200)
+            }
         } catch (err) {
+            console.log('error!!!', err)
             httpOut(res, err, 500)
         }
 

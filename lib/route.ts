@@ -92,7 +92,7 @@ const createEndpointHandler = (
         if (customHandlers.length === 1) {
             return customHandlers[0]
         }
-
+        // @@ if no handler exists, we need to return method not avaliable.
         return customHandlers
     }
 
