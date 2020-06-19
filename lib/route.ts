@@ -83,13 +83,17 @@ const createEndpointHandler = (
             return methodHandler(ctx)
         }
 
-        return {}
+        const customHandlers = await Promise.all(
+            handlers.custom.map((handler: any) => handler(
+                ctx,
+                datasourceModel,
+            )))
 
-        // @@@ ya need to do an undefined check on this.
-        // return Promise.all(handlers.custom.map((handler: any) => handler(
-        //     ctx,
-        //     sequalizeModel,
-        // )))
+        if (customHandlers.length === 1) {
+            return customHandlers[0]
+        }
+
+        return customHandlers
     }
 
     return {

@@ -24,17 +24,19 @@ const parseRequest = (req: any) => {
 
 const handleErr = (
     res: http.ServerResponse,
-) => (err: string, status = 500) => {
+) => (err?: string, status = 500) => {
     const adjustedErr = { error: err };
 
-    res.writeHead(status, { 'Content-Type': 'application/json' });
+    if (!!err) {
+        res.writeHead(status, { 'Content-Type': 'application/json' });
+    }
     res.write(JSON.stringify(adjustedErr));
     res.end();
 
     return;
 };
 
-export type RequestError = (err: string, status?: number) => any;
+export type RequestError = (err?: string, status?: number) => any;
 
 export interface RequestContext {
     postBody: () => Promise<Array<string>>,

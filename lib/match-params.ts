@@ -2,8 +2,6 @@ export default (comparer: string, incoming: string) => {
     const incomingSplit = incoming.split('/')
     const comparerSplit = comparer.split('/')
 
-    console.log(comparerSplit, incomingSplit)
-
     if (comparerSplit.length !== incomingSplit.length) {
         return undefined
     }
@@ -16,7 +14,6 @@ export default (comparer: string, incoming: string) => {
             continue;
         }
 
-        console.log(currentComparer, incomingSplit[i])
         if (currentComparer !== incomingSplit[i]) {
             return undefined
         }
