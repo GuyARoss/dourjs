@@ -1,31 +1,49 @@
 import http from 'http';
-import httpServer, { RequestError } from './http-server';
+import httpServer, { RequestError, RequestContext } from './http-server';
+import { EndpointHandler } from './route';
+import lazyReturn from './lazy-return';
+import matchParams from './match-params';
+import lazyTruth from './lazy-truth';
 
-import RoutingContext from './types/routing-context';
-
-export default ({ routes }: { routes: { [id: string]: any } }) => (
+export default ({ routes }: { routes: { [id: string]: EndpointHandler } }) => (
     port: number,
     cb: () => void,
 ) => {
     httpServer(port, async (
-        resp: any,
+        request: RequestContext,
         handleErr: RequestError,
-        req: http.IncomingMessage,
+        httpRequest: http.IncomingMessage,
+        httpResponse: http.ServerResponse,
     ) => {
-        const endpoint = routes[req.url as string]
-        const ctx = {
-            method: req.method.toLowerCase(),
-            urlParams: {}
-        } as RoutingContext;
+        const incomingUri = httpRequest.url as string
 
-        // console.log(await endpoint())
+        let matches;
+        const endpoint = lazyTruth<EndpointHandler>(routes, (
+            routeKey: string,
+        ) => {
+            const route = routes[routeKey]
+            if (route.matchParams) {
+                // @@ match the paths with the route
+                matches = matchParams(routeKey, incomingUri)
+                return !!matches
+            }
 
-        if (!!endpoint) {
-            const endpointResponse = await endpoint(ctx)
-            return endpointResponse;
+            return routeKey === incomingUri
+        })
+
+        if (typeof endpoint === 'undefined') {
+            handleErr('Resource Not Found', 404)
+            return
         }
 
-        handleErr('Resource Not Found', 404)
+        if (request.method === 'OPTIONS') {
+            httpResponse.setHeader('Allow', endpoint.supportedOperations.join(','))
+        }
+
+        return endpoint.handler({
+            ...request,
+            matchParams: matches,
+        });
     })
 
     cb();

@@ -1,7 +1,8 @@
 import lazyTruth from './lazy-truth';
 
+import { RequestContext } from './http-server';
+
 import crudTypes from './types/crud-operation.enum';
-import RoutingContext from './types/routing-context';
 import { DataSource, DataSourceModel } from './types/datasource-adapter.type';
 
 type opType = crudTypes;
@@ -14,63 +15,72 @@ export const createHandlers = (
 ) => operationTypes.reduce((a, c) => typeof c !== 'function' ? ({
     ...a,
     [c]: lazyTruth({
-        [crudTypes.CREATE]: (
-            ctx: RoutingContext,
-        ) => datasource.create(ctx.postData),
-        [crudTypes.UPDATE]: (
-            ctx: RoutingContext,
-        ) => datasource.update(ctx.postData),
-        [crudTypes.DELETE]: (
-            ctx: RoutingContext,
-        ) => datasource.delete(ctx.postData),
-        [crudTypes.READ]: ({
-            urlParams: { offset, limit, ...rest },
-        }: RoutingContext,
-        ) =>
-            rest.hasOwnProperty('id') ?
+        [crudTypes.CREATE]: async (
+            ctx: RequestContext,
+        ) => {
+            const postData = await ctx.postBody()
+            return datasource.create(postData)
+        },
+        [crudTypes.UPDATE]: async (
+            ctx: RequestContext,
+        ) => {
+            const postData = await ctx.postBody();
+            return datasource.update(postData);
+        },
+        [crudTypes.DELETE]: async (
+            ctx: RequestContext,
+        ) => {
+            const postData = await ctx.postBody();
+            return datasource.delete(postData);
+        },
+        [crudTypes.READ]: async ({
+            urlParams,
+        }: RequestContext,
+        ) => {
+            const { offset, limit, ...rest } = urlParams()
+            return rest.hasOwnProperty('id') ?
                 datasource.findOne({ where: rest }) :
                 datasource.findAllAndCountAll({
                     where: rest,
                     offset,
                     limit,
-                }),
-
+                })
+        },
     }, (op) => op === c.toString()),
 }) : ({
     ...a,
     custom: [...a.custom, c],
 }), { custom: [] })
 
+export interface EndpointHandler {
+    handler: (ctx: RequestContext) => any,
+    supportedOperations: any,
+    matchParams: boolean,
+}
 
 // creates the requested crud endpoints based on the provided 'operationTypes'
 const createEndpointHandler = (
     name: string,
     datasource: DataSource,
     model: any,
-    operationsTypes: any,
-) => {
+    operationTypes: any,
+): EndpointHandler => {
     const datasourceModel = datasource.define(name, model)
     const handlers: { [id: string]: any } = createHandlers(
         datasourceModel,
-        operationsTypes,
+        operationTypes,
     )
 
-    console.log('datmodel', datasourceModel)
-
-    return async (ctx: RoutingContext) => {
-        console.log(ctx)
+    const handler = async (ctx: RequestContext) => {
         const methodHandler = lazyTruth({
-            get: handlers[crudTypes.READ],
-            put: handlers[crudTypes.UPDATE],
-            delete: handlers[crudTypes.DELETE],
-            post: handlers[crudTypes.CREATE],
+            GET: handlers[crudTypes.READ],
+            PUT: handlers[crudTypes.UPDATE],
+            DELETE: handlers[crudTypes.DELETE],
+            POST: handlers[crudTypes.CREATE],
         }, (op) => op === ctx.method)
-        console.log('mh', methodHandler)
 
         if (!!methodHandler) {
-            const resp = methodHandler(ctx)
-            console.log('look at me', resp)
-            return resp
+            return methodHandler(ctx)
         }
 
         return {}
@@ -80,6 +90,12 @@ const createEndpointHandler = (
         //     ctx,
         //     sequalizeModel,
         // )))
+    }
+
+    return {
+        handler,
+        supportedOperations: operationTypes,
+        matchParams: name.includes('/:'),
     }
 }
 

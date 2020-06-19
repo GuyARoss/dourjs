@@ -1,8 +1,8 @@
 enum CRUDOperation {
-    CREATE = 0,
-    READ = 1,
-    UPDATE = 2,
-    DELETE = 3,
+    CREATE = 'CREATE',
+    READ = 'READ',
+    UPDATE = 'UPDATE',
+    DELETE = 'DELETE',
 }
 
 export default CRUDOperation;

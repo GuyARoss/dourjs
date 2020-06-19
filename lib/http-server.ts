@@ -1,5 +1,7 @@
 import http from 'http';
 
+import extractUrlParams from './extract-url-params';
+
 const parseRequest = (req: any) => {
     return new Promise((res, rej) => {
         const data: Array<string> = [];
@@ -34,46 +36,62 @@ const handleErr = (
 
 export type RequestError = (err: string, status?: number) => any;
 
+export interface RequestContext {
+    postBody: () => Promise<Array<string>>,
+    urlParams: () => { [id: string]: string },
+    method: string,
+    matchParams?: { [id: string]: string },
+}
+
 export type RequestHandler = (
-    resp: any,
+    request: RequestContext,
     handleErr: RequestError,
-    req: http.IncomingMessage,
+    httpRequest: http.IncomingMessage,
+    httpResponse: http.ServerResponse,
 ) => any
 
-const HTTPServer = async (port: number, handler: RequestHandler) => {
-    http.createServer(async (req, res) => {
-        try {
-            const { resp, err } = await parseRequest(req)
-                .then((resp) => ({ resp, err: undefined }))
-                .catch((err) => ({ resp: undefined, err }));
+const httpOutBuilder = () => {
+    return (res: http.ServerResponse, response: object, code: number) => {
+        res.setHeader('X-Powered-By', 'Ethereal')
 
-            if (err) {
-                const adjustedErr = { error: err.message };
-
-                res.writeHead(500, { 'Content-Type': 'application/json' });
-                res.write(JSON.stringify(adjustedErr));
-                res.end();
-
-                return;
-            }
-
-            const httpResponse = await handler(resp, handleErr(res), req);
-            if (!httpResponse) {
-                return;
-            }
-
-            const jsonResp = JSON.stringify(httpResponse);
-
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.write(jsonResp);
-            res.end();
-        } catch (err) {
-            console.log(err)
-            res.writeHead(500, { 'Content-Type': 'application/json' });
-            res.write(JSON.stringify(err));
-            res.end();
+        if (response) {
+            res.writeHead(code, { 'Content-Type': 'application/json' });
+            res.write(JSON.stringify(response));
+            return
         }
 
+        res.writeHead(code);
+    }
+}
+
+const HTTPServer = async (port: number, router: RequestHandler) => {
+    const httpOut = httpOutBuilder();
+
+    http.createServer(async (req, res) => {
+        try {
+            const requestContext = {
+                postBody: async () => parseRequest(req),
+                urlParams: () => extractUrlParams(req.url as string),
+                method: req.method,
+            } as RequestContext
+
+            const handlerResponse = await router(
+                requestContext,
+                handleErr(res),
+                req,
+                res,
+            );
+
+            if (!handlerResponse) {
+                return;
+            }
+
+            httpOut(res, handlerResponse, 200)
+        } catch (err) {
+            httpOut(res, err, 500)
+        }
+
+        res.end();
     }).listen(port);
 };
 
