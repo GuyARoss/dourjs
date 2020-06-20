@@ -1,7 +1,11 @@
-import { DataSourceAdapter, DataSource, DataSourceModel, RequestContext } from '../../types';
+import { DataSourceAdapter, DataSource, DataSourceModel } from '../../types';
 
 export default (): DataSourceAdapter => {
-    console.warn('Memory Memory: This mode datasource is not recommended for prod environments')
+    console.warn(
+        '\x1b[93m',
+        'Warning: Memory Adapter: This datasource is not recommended for prod environments',
+        '\x1b[0m',
+    )
 
     let storage: Array<any> = [];
 

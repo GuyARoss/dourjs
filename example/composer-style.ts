@@ -2,10 +2,8 @@ import http from 'http';
 
 import types from '../lib/model-router/model-types';
 import memoryStore from '../lib/adapters/memory';
-import { MiddlewareNext } from '../lib/core/start';
-import { CrudType, RequestContext } from '../lib/types';
-import compose, { withMiddleware, handleGet } from '../lib/composer';
-import { withModelRouter, handleModel } from '../lib/model-router';
+import { CrudType, RequestContext, MiddlewareNext } from '../lib/types';
+import compose, { withMiddleware, handleGet, withModelRouter, handleModel } from '../lib/composer';
 
 const store = memoryStore();
 
@@ -25,7 +23,7 @@ export default compose(
     withModelRouter(store),
     handleModel('/test/:poop', {
         name: types.String,
-    }, [CrudType.READ]),
+    }, [CrudType.READ, CrudType.CREATE, CrudType.DELETE, CrudType.UPDATE]),
     handleGet('/test', (ctx: RequestContext) => {
         return 'test123'
     }),
