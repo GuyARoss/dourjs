@@ -17,8 +17,11 @@
         "build": "npm run build:types && npm run build:js",
         "build:types": "tsc --emitDeclarationOnly",
         "build:js": "babel lib --out-dir dist --extensions \".ts,.tsx\" --source-maps inline",
-        "prepare": "npm run build",
-        "prepublishOnly": "npm test && npm run lint",
+        "clean": "rm -rf dist",
+        "prebuildpackage": "npm run clean && npm run build && node dist/setup-package.js",
+        "buildpackage": "cd dist && npm pack",
+        "prepare": "npm run buildpackage",
+        "prepublishOnly": "npm test && npm run lint"
     },
     "author": "",
     "license": "ISC",
