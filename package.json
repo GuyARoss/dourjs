@@ -2,11 +2,8 @@
     "name": "contouring",
     "version": "1.0.6",
     "description": "",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "files": [
-        "dist/*"
-    ],
+    "main": "index.js",
+    "types": "index.d.ts",
     "scripts": {
         "test": "jest",
         "dev": "ts-node-dev --respawn --transpileOnly ./index.ts",
