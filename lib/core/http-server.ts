@@ -42,8 +42,6 @@ export type RequestError = (err?: string, status?: number) => any
 export type RequestHandler = (
   request: RequestContext,
   handleErr: RequestError,
-  httpRequest: http.IncomingMessage,
-  httpResponse: http.ServerResponse,
 ) => any
 
 const httpOutBuilder = () => {
@@ -81,12 +79,9 @@ const HTTPServer = async (port: number, router: RequestHandler) => {
 
         const handlerResponse = await router(
           requestContext,
-          handleErr(res),
-          req,
-          res,
-        )
+          handleErr(res))
 
-        if (!hangup) {
+        if (!hangup && handlerResponse) {
           httpOut(res, handlerResponse, 200)
         }
       } catch (err) {
