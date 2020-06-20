@@ -14,7 +14,8 @@
         "build": "npm run build:types && npm run build:js",
         "build:types": "tsc --emitDeclarationOnly",
         "build:js": "babel lib --out-dir dist --extensions \".ts,.tsx\" --source-maps inline",
-        "publish-pack": "npm run build && cp ./package.json ./dist/package.json && cd dist && npm publish"
+        "cleanup": "rm -rf dist",
+        "publish-pack": "npm run build && cp ./package.json ./dist/package.json && cd dist && npm publish && npm cleanup"
     },
     "author": "",
     "license": "ISC",

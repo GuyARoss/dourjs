@@ -75,6 +75,8 @@ const HTTPServer = async (port: number, router: RequestHandler) => {
           urlParams: () => extractUrlParams(req.url as string),
           method: req.method,
           hangupRequest,
+          request: req,
+          response: res,
         } as RequestContext
 
         const handlerResponse = await router(
@@ -84,15 +86,10 @@ const HTTPServer = async (port: number, router: RequestHandler) => {
           res,
         )
 
-        if (!handlerResponse) {
-          return
-        }
-
         if (!hangup) {
           httpOut(res, handlerResponse, 200)
         }
       } catch (err) {
-        console.log('error!!!', err)
         httpOut(res, err, 500)
       }
 

@@ -1,9 +1,13 @@
+import http from 'http'
 export interface RequestContext {
   postBody: () => Promise<Array<string>>
   urlParams: () => { [id: string]: string }
-  method: string
+  hangupRequest: () => void,
+
+  request: http.IncomingMessage,
+  response: http.ServerResponse,
+
   matchParams?: { [id: string]: string }
-  hangupRequest: any
 }
 export enum CrudType {
   CREATE = 'CREATE',
@@ -31,3 +35,9 @@ export interface DataSourceAdapter {
 }
 
 export type MiddlewareNext = (nextMiddleware?: string) => void
+
+export type MiddlewareHandler = (
+  req: http.IncomingMessage,
+  resp: http.ServerResponse,
+  next: MiddlewareNext,
+) => void

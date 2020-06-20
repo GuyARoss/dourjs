@@ -3,4 +3,4 @@ import modelRouter, { ModelTypes } from './model-router'
 
 export { modelRouter, ModelTypes }
 
-export default router
+export default router()

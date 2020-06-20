@@ -1,4 +1,4 @@
-import { RequestContext, CrudType } from '../types'
+import { RequestContext, CrudType, MiddlewareHandler } from '../types'
 import lazyTruth from '../utils/lazy-truth'
 
 import start from './start'
@@ -36,7 +36,7 @@ const methodHandler = (
 })
 
 export interface Router {
-  registerMiddleware: (key: string, handler: any) => void
+  registerMiddleware: (key: string, handler: MiddlewareHandler) => void
   route: (handler: Route) => void
   get: (path: string, handler: (ctx: RequestContext) => any) => void
   post: (path: string, handler: (ctx: RequestContext) => any) => void
@@ -47,15 +47,14 @@ export interface Router {
 
 export default (): Router => {
   const routes = {} as { [id: string]: any }
-  const middleware = {} as { [id: string]: any }
+  const middleware = {} as { [id: string]: MiddlewareHandler }
   const initRoute = (route: Route) =>
     (routes[route.endpointPath] = route.endpointDetails)
 
   return {
-    registerMiddleware: (key: string, handler: any) => {
+    registerMiddleware: (key: string, handler: MiddlewareHandler) => {
       middleware[key] = handler
     },
-
     route: (handler: Route) => initRoute(handler),
     get: (path: string, handler: (ctx: RequestContext) => any) =>
       initRoute({

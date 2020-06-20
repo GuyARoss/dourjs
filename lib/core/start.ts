@@ -14,8 +14,7 @@ export interface EndpointHandler {
 
 const executeMiddleware = async (
   middleware: { [id: string]: any },
-  req: http.IncomingMessage,
-  resp: http.ServerResponse,
+  ctx: RequestContext,
 ) => {
   let count = 0
   let prev
@@ -34,7 +33,7 @@ const executeMiddleware = async (
       return false
     }
 
-    await middleware[middlewareKeys[count]](req, resp, next)
+    await middleware[middlewareKeys[count]](ctx, next)
 
     prev = count
   }
@@ -54,22 +53,19 @@ export default ({
   httpServer(
     port,
     async (
-      request: RequestContext,
+      ctx: RequestContext,
       handleErr: RequestError,
-      httpRequest: http.IncomingMessage,
-      httpResponse: http.ServerResponse,
     ) => {
       const resolved = await executeMiddleware(
         middleware,
-        httpRequest,
-        httpResponse,
+        ctx,
       )
       if (!resolved) {
-        request.hangupRequest()
+        ctx.hangupRequest()
         return {}
       }
 
-      const incomingUri = httpRequest.url as string
+      const incomingUri = ctx.request.url as string
 
       let matches
       const endpoint = lazyTruth<EndpointHandler>(
@@ -90,14 +86,13 @@ export default ({
         return
       }
 
-      if (request.method === 'OPTIONS') {
-        httpResponse.setHeader('Allow', endpoint.supportedOperations.join(','))
+      if (ctx.request.method === 'OPTIONS') {
+        ctx.response.setHeader('Allow', endpoint.supportedOperations.join(','))
       }
 
-      return endpoint.handler({
-        ...request,
-        matchParams: matches,
-      })
+      // @@ revisit the  spread..
+      ctx.matchParams = matches
+      return endpoint.handler(ctx)
     },
   )
 
