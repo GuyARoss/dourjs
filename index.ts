@@ -1,8 +1,19 @@
-/* Express style application */
-import tbd from './lib';
+import compose, {
+    withMiddleware,
+    withModelRouter,
+    handleModel,
+    handleGet,
+} from './lib/composer';
+import { ModelTypes } from './lib/model-router';
+import memoryStore from './lib/adapters/memory';
 import { RequestContext } from './lib/types';
 
-tbd.get('/', (ctx: RequestContext) => {
-})
+// const store = memoryStore();
 
-tbd.start(3000, () => console.log('started'))
+compose(
+    handleGet('/test', ({ response }) => {
+        response.write('Hello World!')
+        // heapdump.writeSnapshot('countouring.heapsnapshot');
+        // return 'test123'
+    }),
+).start(3002, () => console.log('app start on port 3002'))
