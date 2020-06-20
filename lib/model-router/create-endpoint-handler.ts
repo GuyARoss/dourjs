@@ -25,7 +25,7 @@ export default (
         DELETE: handlers[CrudType.DELETE],
         POST: handlers[CrudType.CREATE],
       },
-      (op: string) => op === ctx.method,
+      (op: string) => op === ctx.request.method,
     )
 
     if (!!methodHandler) {
