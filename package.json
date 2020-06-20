@@ -2,7 +2,11 @@
     "name": "ethereal",
     "version": "1.0.0",
     "description": "",
-    "main": "index.ts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "test": "jest",
         "dev": "ts-node-dev --respawn --transpileOnly ./index.ts",
@@ -12,7 +16,7 @@
         "lint": "tslint -p tsconfig.json",
         "build": "npm run build:types && npm run build:js",
         "build:types": "tsc --emitDeclarationOnly",
-        "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+        "build:js": "babel lib --out-dir dist --extensions \".ts,.tsx\" --source-maps inline",
         "prepare": "npm run build",
         "prepublishOnly": "npm test && npm run lint"
     },
