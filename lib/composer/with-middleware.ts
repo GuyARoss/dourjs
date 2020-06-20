@@ -1,6 +1,10 @@
+import { MiddlewareHandler } from '../types';
+
 import { CompositionContext } from './types'
 
-export default (key: string, handler: any) => (ctx: CompositionContext) => {
+export default (
+  key: string, handler: MiddlewareHandler,
+) => (ctx: CompositionContext) => {
   ctx.app.registerMiddleware(key, handler)
   return ctx
 }

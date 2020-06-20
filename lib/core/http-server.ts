@@ -90,6 +90,7 @@ const HTTPServer = async (port: number, router: RequestHandler) => {
           httpOut(res, handlerResponse, 200)
         }
       } catch (err) {
+        console.log(err)
         httpOut(res, err, 500)
       }
 

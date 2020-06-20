@@ -37,7 +37,6 @@ export interface DataSourceAdapter {
 export type MiddlewareNext = (nextMiddleware?: string) => void
 
 export type MiddlewareHandler = (
-  req: http.IncomingMessage,
-  resp: http.ServerResponse,
+  ctx: RequestContext,
   next: MiddlewareNext,
 ) => void
