@@ -1,11 +1,11 @@
 {
     "name": "contouring",
-    "version": "1.0.3",
+    "version": "1.0.1",
     "description": "",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "files": [
-        "dist"
+        "dist/*"
     ],
     "scripts": {
         "test": "jest",
@@ -17,10 +17,7 @@
         "build": "npm run build:types && npm run build:js",
         "build:types": "tsc --emitDeclarationOnly",
         "build:js": "babel lib --out-dir dist --extensions \".ts,.tsx\" --source-maps inline",
-        "clean": "rm -rf dist",
-        "prebuildpackage": "npm run clean && npm run build && node dist/setup-package.js",
-        "buildpackage": "cd dist && npm pack",
-        "prepare": "npm run buildpackage",
+        "prepare": "npm run build",
         "prepublishOnly": "npm test && npm run lint"
     },
     "author": "",
@@ -37,6 +34,7 @@
         "@types/jest": "^25.2.3",
         "jest-cli": "^26.0.1",
         "prettier": "^2.0.5",
+        "testpack-cli": "^1.1.4",
         "ts-jest": "^26.0.0",
         "ts-node-dev": "^1.0.0-pre.44",
         "tslint": "^6.1.2",
