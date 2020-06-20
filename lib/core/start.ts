@@ -12,7 +12,6 @@ export interface EndpointHandler {
     matchParams: boolean,
 }
 
-export type MiddlewareNext = (nextMiddleware?: string) => void
 
 const executeMiddleware = async (
     middleware: { [id: string]: any },
@@ -53,7 +52,6 @@ export default ({ routes, middleware }: {
     port: number,
     cb: () => void,
     ) => {
-        console.log(routes)
         httpServer(port, async (
             request: RequestContext,
             handleErr: RequestError,

@@ -1,6 +1,5 @@
 import lazyTruth from '../utils/lazy-truth';
-import { RequestContext, CrudType } from '../types';
-import { DataSourceModel } from '../types/datasource-adapter.type';
+import { DataSourceModel, RequestContext, CrudType } from '../types';
 
 // create handlers for each of the different method types.
 // if "custom" we want to map that to a special extended endpoint

@@ -1,5 +1,5 @@
 
-import DataSourceAdapter from '../types/datasource-adapter.type';
+import { DataSourceAdapter } from '../types';
 
 import createEndpointHandler from './create-endpoint-handler';
 

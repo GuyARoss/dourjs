@@ -11,3 +11,23 @@ export enum CrudType {
     UPDATE = 'UPDATE',
     DELETE = 'DELETE',
 }
+
+export interface DataSource {
+    // creates the collection/ table of the datasource.
+    define: (name: string, model: Object) => any,
+}
+
+export interface DataSourceModel {
+    create: (arg: any) => any,
+    update: (arg: any) => any,
+    delete: (arg: any) => any,
+    findOne: (arg: any) => any,
+    findAllAndCountAll: (arg: any) => any,
+}
+
+export interface DataSourceAdapter {
+    configure: () => DataSource,
+    translateModel: (args: any) => void,
+}
+
+export type MiddlewareNext = (nextMiddleware?: string) => void

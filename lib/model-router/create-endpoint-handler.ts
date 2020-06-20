@@ -1,7 +1,6 @@
 import lazyTruth from '../utils/lazy-truth';
-import { RequestContext, CrudType } from '../types';
+import { RequestContext, CrudType, DataSource } from '../types';
 import { EndpointHandler } from '../core/start';
-import { DataSource } from '../types/datasource-adapter.type';
 
 import createHandlers from './create-handlers';
 

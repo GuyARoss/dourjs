@@ -1,7 +1,6 @@
 import { CompositionContext } from '../composer/types';
-import DataSourceAdapter from '../types/datasource-adapter.type';
-
-import router from './model-router';
+import { DataSourceAdapter } from '../types';
+import router from '../model-router';
 
 export const handleModel = (
     path: any, model: any, options: any,

@@ -1,7 +1,7 @@
 import http from 'http';
 
 import types from '../lib/model-router/model-types';
-import memoryStore from '../example/memory-datasource';
+import memoryStore from '../lib/adapters/memory';
 import { MiddlewareNext } from '../lib/core/start';
 import { CrudType, RequestContext } from '../lib/types';
 import compose, { withMiddleware, handleGet } from '../lib/composer';

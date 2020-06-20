@@ -1,4 +1,4 @@
-import memoryStore from '../example/memory-datasource';
+import memoryStore from '../lib/adapters/memory';
 import { RequestContext, CrudType } from '../lib/types';
 import ethereal, { modelRouter, ModelTypes } from '../lib';
 

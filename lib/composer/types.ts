@@ -1,4 +1,4 @@
-import { Router } from '../router';
+import { Router } from '../core/router';
 
 export interface CompositionContext {
     app: Router,
