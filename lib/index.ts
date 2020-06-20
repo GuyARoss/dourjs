@@ -1,5 +1,5 @@
-import router from './core/router';
-import modelRouter, { ModelTypes } from './model-router';
+import router from './core/router'
+import modelRouter, { ModelTypes } from './model-router'
 
 export { modelRouter, ModelTypes }
 

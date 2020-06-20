@@ -13,7 +13,7 @@ export default compose(
         resp: http.ServerResponse,
         next: MiddlewareNext,
     ) => {
-        if (req.headers['authorization'] !== 'test') {
+        if (req.headers.authorization !== 'test') {
             resp.writeHead(401)
             return
         }

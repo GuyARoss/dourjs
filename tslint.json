@@ -1,6 +1,7 @@
 {
     "extends": [
-        "@netflix/tslint-config"
+        "@netflix/tslint-config",
+        "tslint-config-prettier"
     ],
     "rules": {
         "max-line-length": [

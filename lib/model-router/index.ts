@@ -1,4 +1,4 @@
-import modelRouter from './model-router';
-export { default as ModelTypes } from './model-types';
+import modelRouter from './model-router'
+export { default as ModelTypes } from './model-types'
 
-export default modelRouter;
+export default modelRouter
