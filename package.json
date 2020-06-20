@@ -1,5 +1,5 @@
 {
-    "name": "auto-crud",
+    "name": "ethereal",
     "version": "1.0.0",
     "description": "",
     "main": "index.ts",
@@ -12,7 +12,9 @@
         "lint": "tslint -p tsconfig.json",
         "build": "npm run build:types && npm run build:js",
         "build:types": "tsc --emitDeclarationOnly",
-        "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline"
+        "build:js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+        "prepare": "npm run build",
+        "prepublishOnly": "npm test && npm run lint"
     },
     "author": "",
     "license": "ISC",
