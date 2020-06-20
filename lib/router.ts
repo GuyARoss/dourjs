@@ -34,7 +34,25 @@ const methodHandler = (
     matchParams: path.includes('/:'),
 })
 
-export default () => {
+export interface Router {
+    registerMiddleware: (key: string, handler: any) => void,
+    route: (handler: Route) => void,
+    get: (
+        path: string, handler: (ctx: RequestContext) => any,
+    ) => void,
+    post: (
+        path: string, handler: (ctx: RequestContext) => any,
+    ) => void,
+    put: (
+        path: string, handler: (ctx: RequestContext) => any,
+    ) => void,
+    delete: (
+        path: string, handler: (ctx: RequestContext) => any,
+    ) => void,
+    start: (port: number, cb: () => void) => void
+}
+
+export default (): Router => {
     const routes = {} as { [id: string]: any };
     const middleware = {} as { [id: string]: any };
     const initRoute = (

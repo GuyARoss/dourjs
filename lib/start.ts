@@ -1,6 +1,5 @@
 import http from 'http';
 import httpServer, { RequestError, RequestContext } from './http-server';
-import lazyReturn from './utils/lazy-return';
 import matchParams from './utils/match-params';
 import lazyTruth from './utils/lazy-truth';
 
@@ -10,6 +9,7 @@ export interface EndpointHandler {
     matchParams: boolean,
 }
 
+export type MiddlewareNext = (nextMiddleware?: string) => void
 
 const executeMiddleware = async (
     middleware: { [id: string]: any }, req, resp,
