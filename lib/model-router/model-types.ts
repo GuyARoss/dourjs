@@ -1,5 +1,3 @@
-import { Model } from "sequelize/types";
-
 enum ModelType {
     String = 0,
     Number = 1,

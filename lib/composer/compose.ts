@@ -1,4 +1,4 @@
-import router, { Router } from '../router';
+import router, { Router } from '../core/router';
 
 import { CompositionContext } from './types';
 

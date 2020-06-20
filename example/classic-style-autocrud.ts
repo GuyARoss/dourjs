@@ -1,22 +1,19 @@
 import memoryStore from '../example/memory-datasource';
-import { RequestContext } from '../lib/http-server';
-import ModelType from '../lib/model-types';
-import modelRouter from '../lib/model-router';
-import router from '../lib/router';
-import CRUDOperation from '../lib/types/crud-operation.enum';
+import { RequestContext, CrudType } from '../lib/types';
+import ethereal, { modelRouter, ModelTypes } from '../lib';
 
-const app = router()
+const app = ethereal()
 
 const store = memoryStore();
 const autoCrud = modelRouter(store)
 
 app.route(autoCrud('/test/:poop', {
-    name: ModelType.String,
-}, [CRUDOperation.READ, CRUDOperation.READ]))
+    name: ModelTypes.String,
+}, [CrudType.READ, CrudType.READ]))
 
 
 app.route(autoCrud('/custom/:poop', {
-    name: ModelType.String,
+    name: ModelTypes.String,
 }, [
     (ctx: RequestContext) => {
         return ctx.matchParams

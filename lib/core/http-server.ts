@@ -1,6 +1,7 @@
 import http from 'http';
 
-import extractUrlParams from './utils/extract-url-params';
+import { RequestContext } from '../types';
+import extractUrlParams from '../utils/extract-url-params';
 
 const parseRequest = (req: any) => {
     return new Promise((res, rej) => {
@@ -37,14 +38,6 @@ const handleErr = (
 };
 
 export type RequestError = (err?: string, status?: number) => any;
-
-export interface RequestContext {
-    postBody: () => Promise<Array<string>>,
-    urlParams: () => { [id: string]: string },
-    method: string,
-    matchParams?: { [id: string]: string },
-    hangupRequest: any,
-}
 
 export type RequestHandler = (
     request: RequestContext,

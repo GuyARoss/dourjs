@@ -1,10 +1,7 @@
-import route from './route';
-import start from './start';
+import { RequestContext, CrudType } from '../types';
+import lazyTruth from '../utils/lazy-truth';
 
-import DataSourceAdapter from './types/datasource-adapter.type';
-import { RequestContext } from './http-server';
-import CRUDOperation from './types/crud-operation.enum';
-import lazyTruth from './utils/lazy-truth';
+import start from './start';
 
 interface EndpointHandler {
     handler: any,
@@ -18,10 +15,10 @@ interface Route {
 }
 
 const mapOperation = (method: string) => lazyTruth({
-    'POST': [CRUDOperation.CREATE],
-    'GET': [CRUDOperation.READ],
-    'PUT': [CRUDOperation.UPDATE],
-    'DELETE': [CRUDOperation.DELETE],
+    'POST': [CrudType.CREATE],
+    'GET': [CrudType.READ],
+    'PUT': [CrudType.UPDATE],
+    'DELETE': [CrudType.DELETE],
 }, (current) => current === method)
 
 const methodHandler = (
@@ -63,11 +60,7 @@ export default (): Router => {
         registerMiddleware: (key: string, handler: any) => {
             middleware[key] = handler
         },
-        // routeModel: route(
-        //     datasource,
-        //     initRoute,
-        //     dataSourceAdapter.translateModel,
-        // ),
+
         route: (handler: Route) => initRoute(handler),
         get: (
             path: string, handler: (ctx: RequestContext) => any,

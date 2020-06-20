@@ -1,7 +1,10 @@
 import http from 'http';
-import httpServer, { RequestError, RequestContext } from './http-server';
-import matchParams from './utils/match-params';
-import lazyTruth from './utils/lazy-truth';
+
+import matchParams from '../utils/match-params';
+import lazyTruth from '../utils/lazy-truth';
+import { RequestContext } from '../types';
+
+import httpServer, { RequestError } from './http-server';
 
 export interface EndpointHandler {
     handler: (ctx: RequestContext) => any,
@@ -12,7 +15,9 @@ export interface EndpointHandler {
 export type MiddlewareNext = (nextMiddleware?: string) => void
 
 const executeMiddleware = async (
-    middleware: { [id: string]: any }, req, resp,
+    middleware: { [id: string]: any },
+    req: http.IncomingMessage,
+    resp: http.ServerResponse,
 ) => {
     let count = 0;
     let prev;

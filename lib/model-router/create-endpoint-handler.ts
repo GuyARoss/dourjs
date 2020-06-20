@@ -1,8 +1,7 @@
 import lazyTruth from '../utils/lazy-truth';
-import { RequestContext } from '../http-server';
-import { EndpointHandler } from '../start';
+import { RequestContext, CrudType } from '../types';
+import { EndpointHandler } from '../core/start';
 import { DataSource } from '../types/datasource-adapter.type';
-import crudTypes from '../types/crud-operation.enum';
 
 import createHandlers from './create-handlers';
 
@@ -21,17 +20,17 @@ export default (
 
     const handler = async (ctx: RequestContext) => {
         const methodHandler = lazyTruth({
-            GET: handlers[crudTypes.READ],
-            PUT: handlers[crudTypes.UPDATE],
-            DELETE: handlers[crudTypes.DELETE],
-            POST: handlers[crudTypes.CREATE],
+            GET: handlers[CrudType.READ],
+            PUT: handlers[CrudType.UPDATE],
+            DELETE: handlers[CrudType.DELETE],
+            POST: handlers[CrudType.CREATE],
         }, (op: string) => op === ctx.method)
 
         if (!!methodHandler) {
             return methodHandler(ctx)
         }
 
-        const customHandlers = await Promise.all(
+        const customHandlers: Array<Promise<any>> = await Promise.all(
             handlers.custom.map((handler: any) => handler(
                 ctx,
                 datasourceModel,
