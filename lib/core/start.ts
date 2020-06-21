@@ -96,5 +96,7 @@ export default ({
     },
   )
 
-  cb()
+  if (typeof cb === 'function') {
+    cb()
+  }
 }

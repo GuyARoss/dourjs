@@ -1,6 +1,18 @@
 import router from './core/router'
 import modelRouter, { ModelTypes } from './model-router'
+import { CrudType } from './types'
 
-export { modelRouter, ModelTypes }
+const modeler = {
+    router: modelRouter,
+    ...ModelTypes,
+}
 
-export default router()
+const crudTypes = CrudType
+
+export {
+    crudTypes,
+    modeler,
+}
+
+const dour = router
+export default dour

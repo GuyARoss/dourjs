@@ -42,7 +42,7 @@ export interface Router {
   post: (path: string, handler: (ctx: RequestContext) => any) => void
   put: (path: string, handler: (ctx: RequestContext) => any) => void
   delete: (path: string, handler: (ctx: RequestContext) => any) => void
-  start: (port: number, cb: () => void) => void
+  start: (port: number, cb?: () => void) => void
 }
 
 export default (): Router => {

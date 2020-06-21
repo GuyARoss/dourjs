@@ -9,8 +9,7 @@ const store = memoryStore();
 
 export default compose(
     withMiddleware('auth', (
-        req: http.IncomingMessage,
-        resp: http.ServerResponse,
+        ctx: RequestContext,
         next: MiddlewareNext,
     ) => {
         if (req.headers.authorization !== 'test') {
