@@ -34,7 +34,7 @@ $ npm install dour
 
 ## Framework Benchmark
 |   | Dour (1.0.0)  | Express (4.17.1)  | Koa (2.13.0)  |
-|---|---|---|---|---|
+|---|---------------|-------------------|---------------|
 | Dependencies          | 1  | 30 | 23  | 
 | Runtime Heapsize      | 2.5mb | 4.5mb | 3.8mb  |
 | Average Response-Time  | 2.9ms  | 3.07ms  | 2.92ms  |
