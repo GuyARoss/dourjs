@@ -49,7 +49,7 @@ export default ({
     [id: string]: EndpointHandler
   }
   middleware: any
-}) => (port: number, cb: () => void) => {
+}) => (port: number, cb?: () => void) => {
   httpServer(
     port,
     async (
@@ -90,7 +90,6 @@ export default ({
         ctx.response.setHeader('Allow', endpoint.supportedOperations.join(','))
       }
 
-      // @@ revisit the  spread..
       ctx.matchParams = matches
       return endpoint.handler(ctx)
     },
