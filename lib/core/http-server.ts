@@ -46,7 +46,7 @@ export type RequestHandler = (
 
 const httpOutBuilder = () => {
   return (res: http.ServerResponse, response: object, code: number) => {
-    res.setHeader('X-Powered-By', 'Ethereal')
+    res.setHeader('X-Powered-By', 'dour')
 
     if (response) {
       res.writeHead(code, { 'Content-Type': 'application/json' })
