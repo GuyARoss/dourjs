@@ -37,7 +37,7 @@ $ npm install dour
 |---|---------------|-------------------|---------------|
 | Dependencies          | 1  | 30 | 23  | 
 | Runtime Heapsize      | 2.5mb | 4.5mb | 3.8mb  |
-| Average Response-Time  | 2.9ms  | 3.07ms  | 2.92ms  |
+| Average Response-Time  | 2.995ms  | 3.07ms  | 2.92ms  |
 
 ## Basic Usage
 ### Auto CRUD
