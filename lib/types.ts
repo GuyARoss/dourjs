@@ -30,7 +30,7 @@ export interface DataSourceModel {
 }
 
 export interface DataSourceAdapter {
-  configure: () => DataSource
+  dataSource: DataSource,
   translateModel: (args: any) => void
 }
 

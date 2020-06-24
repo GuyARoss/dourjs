@@ -9,7 +9,7 @@ export default (): DataSourceAdapter => {
 
   let storage: Array<any> = []
 
-  const configure = () =>
+  const dataSource =
     ({
       define: () =>
         ({
@@ -35,7 +35,7 @@ export default (): DataSourceAdapter => {
     } as DataSource)
 
   return {
-    configure,
-    translateModel: () => {},
+    dataSource,
+    translateModel: () => { },
   }
 }
