@@ -27,7 +27,7 @@ export default (): DataSourceAdapter => {
             return true
           },
           findOne: async ({ where }) => storage.find((x) => x.id === where.id),
-          findAllAndCountAll: async () => ({
+          findAndCountAll: async () => ({
             data: storage,
             count: storage.length,
           }),

@@ -26,7 +26,7 @@ export interface DataSourceModel {
   update: (arg: any) => any
   delete: (arg: any) => any
   findOne: (arg: any) => any
-  findAllAndCountAll: (arg: any) => any
+  findAndCountAll: (arg: any) => any
 }
 
 export interface DataSourceAdapter {
