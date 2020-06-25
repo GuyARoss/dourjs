@@ -46,6 +46,6 @@ export default (
   return {
     handler,
     supportedOperations: operationTypes,
-    matchParams: name.includes('/:'),
+    matchParams: path.includes('/:'),
   }
 }
