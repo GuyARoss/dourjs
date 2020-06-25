@@ -6,12 +6,12 @@ import createHandlers from './create-handlers'
 
 // creates the requested crud endpoints based on the provided 'operationTypes'
 export default (
-  name: string,
+  path: string,
   datasource: DataSource,
   model: any,
   operationTypes: any,
 ): EndpointHandler => {
-  const datasourceModel = datasource.define(name, model)
+  const datasourceModel = datasource.define(`${path.substr(1)}`, model)
   const handlers: { [id: string]: any } = createHandlers(
     datasourceModel,
     operationTypes,

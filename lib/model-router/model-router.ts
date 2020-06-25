@@ -3,10 +3,10 @@ import { DataSourceAdapter } from '../types'
 import createEndpointHandler from './create-endpoint-handler'
 
 export default (datasourceAdapter: DataSourceAdapter) => (
-  name: string, model: any, operationsTypes: Array<any>) => ({
-    endpointPath: name,
+  path: string, model: any, operationsTypes: Array<any>) => ({
+    endpointPath: path,
     endpointDetails: createEndpointHandler(
-      name,
+      path,
       datasourceAdapter.dataSource,
       datasourceAdapter.translateModel(model),
       operationsTypes,
