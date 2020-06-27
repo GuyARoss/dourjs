@@ -2,14 +2,14 @@ import { CompositionContext } from '../composer/types'
 import { DataSourceAdapter } from '../types'
 import router from '../model-router'
 
-export const handleModel = (path: any, model: any, options: any) => (
+export const handleModel = (path: string, model: any, options: any) => (
   ctx: CompositionContext,
 ) => {
   const autoCrud = ctx.values.autoCrud
 
   if (typeof autoCrud === 'undefined') {
     throw Error(
-      'withModel: withModelRouter should be applied before handleModel',
+      'handleModel: withModelRouter should be applied before handleModel',
     )
   }
 

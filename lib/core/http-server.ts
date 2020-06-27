@@ -3,38 +3,30 @@ import http from 'http'
 import { RequestContext } from '../types'
 import extractUrlParams from '../utils/extract-url-params'
 
-const parseRequest = (req: any) => {
-  return new Promise((res, rej) => {
-    const data: Array<string> = []
-    req.on('data', (chunk: any) => {
-      data.push(chunk)
-    })
-    req.on('end', () => {
-      if (req.method === 'POST') {
-        res(JSON.parse(data.join('')))
-      }
+const parseRequest = (req: any) => new Promise((res, rej) => {
+  const data: Array<string> = []
 
-      res()
-    })
-    req.on('error', (err: string) => {
-      rej(err)
-    })
+  req.on('data', (chunk: any) => {
+    data.push(chunk)
   })
-}
+  req.on('end', () => {
+    if (data.length > 0) {
+      res(JSON.parse(data.join('')))
+      return
+    }
+
+    res()
+  })
+  req.on('error', (err: string) => {
+    rej(err)
+  })
+})
 
 const handleErr = (res: http.ServerResponse) => (
   err?: string,
   status = 500,
 ) => {
-  const adjustedErr = { error: err }
-
-  if (!!err) {
-    res.writeHead(status, { 'Content-Type': 'application/json' })
-  }
-  res.write(JSON.stringify(adjustedErr))
-  res.end()
-
-  return
+  httpOut(res, { error: err }, status)
 }
 
 export type RequestError = (err?: string, status?: number) => any
@@ -44,43 +36,54 @@ export type RequestHandler = (
   handleErr: RequestError,
 ) => any
 
-const httpOutBuilder = () => {
-  return (res: http.ServerResponse, response: object, code: number) => {
-    res.setHeader('X-Powered-By', 'dour')
-
-    if (response) {
-      res.writeHead(code, { 'Content-Type': 'application/json' })
-      res.write(JSON.stringify(response))
-      return
-    }
-
-    res.writeHead(code)
+const httpOut = (res: http.ServerResponse, response: object, code: number) => {
+  if (typeof response === 'object') {
+    res.writeHead(code, { 'Content-Type': 'application/json' })
+    res.write(JSON.stringify(response))
+    return
   }
+
+  res.writeHead(code, { 'Content-Type': 'text/plain' })
+  res.write(response)
 }
 
-const HTTPServer = async (port: number, router: RequestHandler) => {
-  const httpOut = httpOutBuilder()
+const setRequiredHeaders = (res: http.ServerResponse) => {
+  res.setHeader('X-Powered-By', 'node-dour')
+}
 
+const createRequestContext = (
+  req: http.IncomingMessage,
+  res: http.ServerResponse,
+  hangupRequest: any,
+) => ({
+  postBody: async () => parseRequest(req),
+  urlParams: () => extractUrlParams(req.url as string),
+  method: req.method,
+  hangupRequest,
+  request: req,
+  response: res,
+}) as RequestContext
+
+const HTTPServer = async (port: number, router: RequestHandler) => {
   http
     .createServer(async (req, res) => {
+      setRequiredHeaders(res)
+
       let hangup = false
       const hangupRequest = () => {
         hangup = true
       }
+
       try {
-        const requestContext = {
-          postBody: async () => parseRequest(req),
-          urlParams: () => extractUrlParams(req.url as string),
-          method: req.method,
-          hangupRequest,
-          request: req,
-          response: res,
-        } as RequestContext
+        const requestContext = createRequestContext(req, res, hangupRequest)
 
         const handlerResponse = await router(
           requestContext,
-          handleErr(res))
+          handleErr(res),
+        )
 
+        // the handler can either handle the output  
+        // or the http server can handle the output
         if (!hangup && handlerResponse) {
           httpOut(res, handlerResponse, 200)
         }
@@ -88,6 +91,7 @@ const HTTPServer = async (port: number, router: RequestHandler) => {
         httpOut(res, err.toString(), 500)
       }
 
+      // we do this here rather than the httpOut so we ensure it is closed.
       res.end()
     })
     .listen(port)

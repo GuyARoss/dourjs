@@ -25,7 +25,7 @@ const mapOperation = (method: string) =>
     (current) => current === method,
   )
 
-const methodHandler = (
+export const methodHandler = (
   method: string,
   path: string,
   baseHandler: (ctx: RequestContext) => EndpointHandler,
@@ -36,7 +36,7 @@ const methodHandler = (
 })
 
 export interface Router {
-  registerMiddleware: (key: string, handler: MiddlewareHandler) => void
+  use: (key: string, handler: MiddlewareHandler) => void
   route: (handler: Route) => void
   get: (path: string, handler: (ctx: RequestContext) => any) => void
   post: (path: string, handler: (ctx: RequestContext) => any) => void
@@ -52,7 +52,7 @@ export default (): Router => {
     (routes[route.endpointPath] = route.endpointDetails)
 
   return {
-    registerMiddleware: (key: string, handler: MiddlewareHandler) => {
+    use: (key: string, handler: MiddlewareHandler) => {
       middleware[key] = handler
     },
     route: (handler: Route) => initRoute(handler),

@@ -12,7 +12,7 @@ export interface EndpointHandler {
   matchParams: boolean
 }
 
-const executeMiddleware = async (
+export const executeMiddleware = async (
   middleware: { [id: string]: any },
   ctx: RequestContext,
 ) => {
@@ -28,6 +28,7 @@ const executeMiddleware = async (
 
     count = middlewareKeys.indexOf(id)
   }
+
   while (count < middlewareKeys.length) {
     if (prev === count) {
       return false
