@@ -8,7 +8,7 @@ beforeEach(() => {
     mockDatasource = ({
         create: () => "create",
         update: () => "update",
-        delete: () => "delete",
+        destroy: () => "delete",
         findOne: () => "findOne",
         findAndCountAll: () => "findAndCountAll",
     }) as DataSourceModel
@@ -52,7 +52,7 @@ describe('create handlers', () => {
         it('DELETE', async () => {
             const resp = await createHandler(mockDatasource, [CrudType.DELETE])
             expect(await resp[CrudType.DELETE]({
-                postBody: () => { },
+                urlParams: () => ({ offset: undefined, limit: undefined }),
             })).toEqual("delete")
         })
         describe('READ', () => {

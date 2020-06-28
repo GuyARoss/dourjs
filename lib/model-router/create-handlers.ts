@@ -20,8 +20,11 @@ export default (datasource: DataSourceModel, operationTypes: Array<CrudType>) =>
                 return datasource.update(postData)
               },
               [CrudType.DELETE]: async (ctx: RequestContext) => {
-                const postData = await ctx.postBody()
-                return datasource.delete(postData)
+                const params = await ctx.urlParams()
+
+                return datasource.destroy({
+                  where: params,
+                })
               },
               [CrudType.READ]: async ({ urlParams }: RequestContext) => {
                 const { offset, limit, ...rest } = urlParams()

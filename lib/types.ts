@@ -24,7 +24,7 @@ export interface DataSource {
 export interface DataSourceModel {
   create: (arg: any) => any
   update: (arg: any) => any
-  delete: (arg: any) => any
+  destroy: (arg: any) => any
   findOne: (arg: any) => any
   findAndCountAll: (arg: any) => any
 }

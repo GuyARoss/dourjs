@@ -22,8 +22,8 @@ export default (): DataSourceAdapter => {
 
             return data
           },
-          delete: async (data) => {
-            storage = storage.filter((x) => x !== data.bind)
+          destroy: async ({ id }) => {
+            storage = storage.filter((x) => x !== id)
             return true
           },
           findOne: async ({ where }) => storage.find((x) => x.id === where.id),
