@@ -81,3 +81,12 @@ compose(
 ).start(3000)
 
 ```
+
+## Contributing
+Feel free to contribute by opening a Pull Request or an issue thread.
+
+Contributions are always appreciated! 
+
+## License
+Dour is [MIT licensed](./LICENSE)
+
