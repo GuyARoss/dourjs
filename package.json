@@ -1,6 +1,6 @@
 {
     "name": "dour",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Lightweight, performant, barebones web service framework for Node.js.",
     "main": "index.js",
     "types": "index.d.ts",
