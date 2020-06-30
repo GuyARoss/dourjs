@@ -66,7 +66,7 @@ export default ({
         return {}
       }
 
-      const incomingUri = ctx.request.url as string
+      const incomingUri = (ctx.request.url as string).split('?')[0]
 
       let matches
       const endpoint = lazyTruth<EndpointHandler>(
