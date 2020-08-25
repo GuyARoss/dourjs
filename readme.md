@@ -48,7 +48,7 @@ import { dourMemory } from 'dour/adapters'
 
 const app = dour() 
 
-// ~ pass in the corrasponding adapter into the model router.
+// ~ pass in the corresponding adapter into the model router.
 const autoCrud = modeler.Router(dourMemory())
 
 // ~ specify the model schema
