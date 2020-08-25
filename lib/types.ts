@@ -1,6 +1,6 @@
 import http from 'http'
 export interface RequestContext {
-  postBody: () => Promise<Array<string>>
+  postBody: () => Promise<any>
   urlParams: () => { [id: string]: string }
   hangupRequest: () => void,
 
