@@ -50,53 +50,49 @@ export default ({
     [id: string]: EndpointHandler
   }
   middleware: any
-}) => (port: number, cb?: () => void) => {
-  httpServer(
-    port,
-    async (
-      ctx: RequestContext,
-      handleErr: RequestError,
-    ) => {
-      const resolved = await executeMiddleware(
-        middleware,
-        ctx,
-      )
-      if (!resolved) {
-        ctx.hangupRequest()
-        return {}
-      }
+}) => (): http.Server =>
+    httpServer(
+      async (
+        ctx: RequestContext,
+        handleErr: RequestError,
+      ) => {
+        const resolved = await executeMiddleware(
+          middleware,
+          ctx,
+        )
+        if (!resolved) {
+          ctx.hangupRequest()
+          return {}
+        }
 
-      const incomingUri = (ctx.request.url as string).split('?')[0]
+        const incomingUri = (ctx.request.url as string).split('?')[0]
 
-      let matches
-      const endpoint = lazyTruth<EndpointHandler>(
-        routes,
-        (routeKey: string) => {
-          const route = routes[routeKey]
-          if (route.matchParams) {
-            matches = matchParams(routeKey, incomingUri)
-            return !!matches
-          }
+        let matches
+        const endpoint = lazyTruth<EndpointHandler>(
+          routes,
+          (routeKey: string) => {
+            const route = routes[routeKey]
+            if (route.matchParams) {
+              matches = matchParams(routeKey, incomingUri)
+              return !!matches
+            }
 
-          return routeKey === incomingUri
-        },
-      )
+            return routeKey === incomingUri
+          },
+        )
 
-      if (typeof endpoint === 'undefined') {
-        handleErr('resource not found', 404)
-        return
-      }
+        if (typeof endpoint === 'undefined') {
+          handleErr('resource not found', 404)
+          return
+        }
 
-      if (ctx.request.method === 'OPTIONS') {
-        ctx.response.setHeader('Allow', endpoint.supportedOperations.join(','))
-      }
+        if (ctx.request.method === 'OPTIONS') {
+          ctx.response.setHeader('Allow', endpoint.supportedOperations.join(','))
+        }
 
-      ctx.matchParams = matches
-      return endpoint.handler(ctx)
-    },
-  )
+        ctx.matchParams = matches
+        return endpoint.handler(ctx)
+      },
+    )
 
-  if (typeof cb === 'function') {
-    cb()
-  }
-}
+

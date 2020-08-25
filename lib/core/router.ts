@@ -42,7 +42,8 @@ export interface Router {
   post: (path: string, handler: (ctx: RequestContext) => any) => void
   put: (path: string, handler: (ctx: RequestContext) => any) => void
   delete: (path: string, handler: (ctx: RequestContext) => any) => void
-  start: (port: number, cb?: () => void) => void
+  start: (port: number, cb?: () => void) => void,
+  server: any,
 }
 
 export default (): Router => {
@@ -76,6 +77,12 @@ export default (): Router => {
         endpointPath: path,
         endpointDetails: methodHandler('DELETE', path, handler),
       }),
-    start: start({ routes, middleware }),
+    start: async (port: number, cb?: () => void) => {
+      const server = start({ routes, middleware })
+      return server().listen(port, cb)
+    },
+    server: () => {
+      return start({ routes, middleware })()
+    }
   }
 }

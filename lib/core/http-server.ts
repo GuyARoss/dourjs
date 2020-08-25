@@ -64,7 +64,7 @@ const createRequestContext = (
   response: res,
 }) as RequestContext
 
-const HTTPServer = async (port: number, router: RequestHandler) => {
+const HTTPServer = (router: RequestHandler): http.Server =>
   http
     .createServer(async (req, res) => {
       setRequiredHeaders(res)
@@ -94,7 +94,6 @@ const HTTPServer = async (port: number, router: RequestHandler) => {
       // we do this here rather than the httpOut so we ensure it is closed.
       res.end()
     })
-    .listen(port)
-}
+
 
 export default HTTPServer
