@@ -87,7 +87,9 @@ export default ({
         }
 
         if (ctx.request.method === 'OPTIONS') {
+          // we currently don't support this mode, so just hangup the request
           ctx.response.setHeader('Allow', endpoint.supportedOperations.join(','))
+          return
         }
 
         ctx.matchParams = matches
