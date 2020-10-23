@@ -1,0 +1,42 @@
+{
+    "name": "dour",
+    "version": "1.1.4",
+    "description": "Lightweight, performant, barebones web service framework for Node.js.",
+    "main": "index.js",
+    "types": "index.d.ts",
+    "scripts": {
+        "test": "jest",
+        "dev": "ts-node-dev --respawn --transpileOnly ./index.ts",
+        "type-check": "tsc --noEmit",
+        "type-check:watch": "npm run type-check -- --watch",
+        "format": "prettier --write \"lib/**/*.ts\"",
+        "lint": "tslint -p tsconfig.json",
+        "build": "npm run build:types && npm run build:js",
+        "build:types": "tsc --emitDeclarationOnly",
+        "build:js": "babel lib --out-dir dist --extensions \".ts,.tsx\" --source-maps inline",
+        "cleanup": "rm -rf dist",
+        "publish-pack": "npm run build && cp ./package.json ./dist/package.json && cd dist && npm publish && npm run cleanup"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@babel/cli": "^7.8.3",
+        "@babel/core": "^7.8.3",
+        "@babel/plugin-proposal-class-properties": "^7.8.3",
+        "@babel/plugin-transform-runtime": "^7.9.6",
+        "@babel/preset-env": "^7.8.3",
+        "@babel/preset-typescript": "^7.8.3",
+        "@netflix/tslint-config": "^1.0.1",
+        "@types/jest": "^25.2.3",
+        "jest-cli": "^26.0.1",
+        "prettier": "^2.0.5",
+        "testpack-cli": "^1.1.4",
+        "ts-jest": "^26.0.0",
+        "ts-node-dev": "^1.0.0-pre.44",
+        "tslint": "^6.1.2",
+        "tslint-config-prettier": "^1.18.0",
+        "typescript": "^3.7.5",
+        "@babel/runtime": "^7.9.6"
+    },
+    "dependencies": {}
+}
