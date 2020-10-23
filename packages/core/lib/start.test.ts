@@ -1,5 +1,6 @@
-import { executeMiddleware } from './start';
-import { RequestContext } from '../types';
+import { RequestContext } from '@dour/common/types'
+
+import { executeMiddleware } from './start'
 
 describe('start', () => {
     describe('executeMiddleware', () => {

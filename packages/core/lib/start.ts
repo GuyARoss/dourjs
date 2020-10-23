@@ -1,8 +1,8 @@
 import http from 'http'
+import { RequestContext } from '@dour/common/types'
 
-import matchParams from '../utils/match-params'
-import lazyTruth from '../utils/lazy-truth'
-import { RequestContext } from '../types'
+import matchParams from './utils/match-params'
+import lazyTruth from './utils/lazy-truth'
 
 import httpServer, { RequestError } from './http-server'
 

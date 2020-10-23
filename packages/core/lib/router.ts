@@ -1,7 +1,7 @@
-import { RequestContext, CrudType, MiddlewareHandler } from '../types'
-import lazyTruth from '../utils/lazy-truth'
+import { RequestContext, CrudType, MiddlewareHandler } from '@dour/common/types'
 
 import start from './start'
+import lazyTruth from './utils/lazy-truth'
 
 interface EndpointHandler {
   handler: any
@@ -22,13 +22,13 @@ const mapOperation = (method: string) =>
       PUT: [CrudType.UPDATE],
       DELETE: [CrudType.DELETE],
     },
-    (current) => current === method,
+    (current: any) => current === method,
   )
 
 export const methodHandler = (
   method: string,
   path: string,
-  baseHandler: (ctx: RequestContext) => EndpointHandler,
+  baseHandler?: (ctx: RequestContext) => EndpointHandler,
 ) => ({
   handler: baseHandler,
   supportedOperations: mapOperation(method),

@@ -1,4 +1,4 @@
-import { CompositionContext } from '../composer/types'
+import { CompositionContext } from './types'
 import { DataSourceAdapter } from '../types'
 import router from '../model-router'
 

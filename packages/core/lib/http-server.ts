@@ -1,7 +1,7 @@
 import http from 'http'
 
-import { RequestContext } from '../types'
-import extractUrlParams from '../utils/extract-url-params'
+import { RequestContext } from '@dour/common/types'
+import extractUrlParams from './utils/extract-url-params'
 
 const parseRequest = (req: any) => new Promise((res, rej) => {
   const data: Array<string> = []
