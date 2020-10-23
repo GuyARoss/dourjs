@@ -1,6 +1,6 @@
 {
-    "name": "@dour/common",
-    "version": "0.1.2",
+    "name": "@dour/fsm",
+    "version": "0.1.1",
     "main": "index.js",
     "scripts": {
         "test": "jest",
@@ -21,7 +21,9 @@
         "babel-jest": "^26.5.2",
         "jest": "^26.5.3"
     },
-    "dependencies": {},
+    "dependencies": {
+        "@dour/common": "0.1.2"
+    },
     "directories": {
         "lib": "lib"
     },

@@ -137,8 +137,8 @@
         "affectsGlobalScope": true
       },
       "./lib/types.ts": {
-        "version": "842f9bfb714455f7e851b79ce207fa558f083f2b9f8e0f9e973df931cd285952",
-        "signature": "6c4bedab84e4370529069bfc8c5e43e061c316d3d9c18136174d4217f0e33333",
+        "version": "e0679ca887473d5f0c25bc747cf99de91357e87207bb322059ba11ae12494d4b",
+        "signature": "c4605bcc09bff8540743b8f816d8257cb89fa71c3fe253e17009c38e3909f7ef",
         "affectsGlobalScope": false
       },
       "./node_modules/jest-diff/build/cleanupsemantic.d.ts": {

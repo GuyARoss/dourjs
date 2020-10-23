@@ -23,3 +23,7 @@ export type MiddlewareHandler = (
     ctx: RequestContext,
     next: MiddlewareNext,
 ) => void
+
+export type MapOf<T> = { [key: string]: T }
+
+export type Func<T> = (...args: any) => T
